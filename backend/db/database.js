@@ -1,3 +1,4 @@
+import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import bcrypt from "bcryptjs";
@@ -7,7 +8,9 @@ sqlite3.verbose();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const dbPath = path.join(__dirname, "..", "test-generator.db");
+const dbPath = process.env.SQLITE_DB_PATH || path.join(__dirname, "..", "test-generator.db");
+
+fs.mkdirSync(path.dirname(dbPath), { recursive: true });
 
 export const db = new sqlite3.Database(dbPath);
 

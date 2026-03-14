@@ -1,0 +1,48 @@
+services:
+  - type: web
+    name: ai-test-generator-api
+    runtime: node
+    rootDir: backend
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /health
+    disk:
+      name: ai-test-generator-data
+      mountPath: /var/data
+      sizeGB: 1
+    envVars:
+      - key: NODE_VERSION
+        value: 20
+      - key: PORT
+        value: 10000
+      - key: SQLITE_DB_PATH
+        value: /var/data/test-generator.db
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: OPENAI_MODEL
+        value: gpt-4o-mini
+      - key: OPENAI_BASE_URL
+        value: https://openrouter.ai/api/v1
+      - key: JWT_SECRET
+        generateValue: true
+      - key: DEFAULT_FACULTY_EMAIL
+        sync: false
+      - key: DEFAULT_FACULTY_PASSWORD
+        sync: false
+      - key: DEFAULT_STUDENT_EMAIL
+        sync: false
+      - key: DEFAULT_STUDENT_PASSWORD
+        sync: false
+
+  - type: web
+    name: ai-test-generator-web
+    runtime: static
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: NODE_VERSION
+        value: 20
+      - key: VITE_API_URL
+        sync: false
